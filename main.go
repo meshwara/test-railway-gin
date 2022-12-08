@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,13 +16,20 @@ func main() {
 		})
 	})
 
-	r.GET("/file", func(ctx *gin.Context) {
-		var path = "public/berkas.pdf"
-		ctx.Header("Content-Description", "File Transfer")
-		ctx.Header("Content-Transfer-Encoding", "binary")
-		ctx.Header("Content-Disposition", "attachment; filename=berkas.pdf")
-		ctx.Header("Content-Type", "application/octet-stream")
-		ctx.File(path)
+	r.GET("/file/:tipe", func(ctx *gin.Context) {
+		tipe := ctx.Param("tipe")
+		if tipe == "success" {
+			var path = "public/berkas.pdf"
+			ctx.Header("Content-Description", "File Transfer")
+			ctx.Header("Content-Transfer-Encoding", "binary")
+			ctx.Header("Content-Disposition", "attachment; filename=berkas.pdf")
+			ctx.Header("Content-Type", "application/octet-stream")
+			ctx.File(path)
+		} else {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+				"message": "Data tidak valid",
+			})
+		}
 	})
 	r.Run()
 }
