@@ -15,6 +15,11 @@ func main() {
 			"message": "Hello world!",
 		})
 	})
+	r.GET("/file", func(ctx *gin.Context) {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"message": "Data tidak valid",
+		})
+	})
 
 	r.GET("/file/:tipe", func(ctx *gin.Context) {
 		tipe := ctx.Param("tipe")
